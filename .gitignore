@@ -1,0 +1,33 @@
+# Dependências Node.js
+node_modules/
+
+# Banco de dados (dados de produção — nunca commitar)
+db/ponto.db
+db/*.db
+
+# Fotos dos funcionários (dados de produção)
+fotos/
+
+# Ambiente (nunca commitar credenciais)
+.env
+.env.*
+
+# Python (se usar ferramentas auxiliares)
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/settings.json
+*.swp
+*.swo

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PontoSimples — Painel</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="admin-body">
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">⏱</span>
+      <span id="admin-empresa-nome">PontoSimples</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-tab="resumo">Resumo do dia</a>
+      <a href="#" class="nav-item" data-tab="registros">Todos os registros</a>
+      <a href="#" class="nav-item" data-tab="funcionarios">Funcionários</a>
+      <a href="#" class="nav-item" data-tab="financeiro">Financeiro</a>
+      <a href="#" class="nav-item" data-tab="exportar">Exportar CSV</a>
+      <a href="#" class="nav-item" data-tab="configuracoes">Configurações</a>
+    </nav>
+    <a href="/" class="nav-item nav-back">&#8592; Tela do funcionário</a>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- RESUMO DO DIA -->
+    <section id="tab-resumo" class="tab-section active">
+      <div class="section-header">
+        <h2>Resumo do dia</h2>
+        <input type="date" id="resumo-data" class="input-date" />
+      </div>
+      <div id="resumo-grid" class="resumo-grid"></div>
+    </section>
+
+    <!-- TODOS OS REGISTROS -->
+    <section id="tab-registros" class="tab-section">
+      <div class="section-header">
+        <h2>Todos os registros</h2>
+        <div class="filters">
+          <input type="date" id="reg-data" class="input-date" />
+          <select id="reg-funcionario" class="input-select">
+            <option value="">Todos os funcionários</option>
+          </select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table id="registros-table" class="data-table">
+          <thead>
+            <tr>
+              <th>Funcionário</th><th>Código</th><th>Data</th><th>Hora</th>
+              <th>Tipo</th><th>Observação</th><th>Foto</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="registros-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FUNCIONÁRIOS -->
+    <section id="tab-funcionarios" class="tab-section">
+      <div class="section-header">
+        <h2>Funcionários</h2>
+        <button id="btn-novo-func" class="btn btn-primary">+ Novo funcionário</button>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr><th>Código</th><th>Nome</th><th>Valor/hora</th><th>Status</th><th>Ações</th></tr>
+          </thead>
+          <tbody id="func-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FINANCEIRO -->
+    <section id="tab-financeiro" class="tab-section">
+      <div class="section-header">
+        <h2>Financeiro</h2>
+        <div class="filters">
+          <select id="fin-funcionario" class="input-select">
+            <option value="">Todos os funcionários</option>
+          </select>
+          <input type="date" id="fin-inicio" class="input-date" title="Data início" />
+          <input type="date" id="fin-fim"    class="input-date" title="Data fim" />
+          <button id="btn-filtrar-fin" class="btn btn-ghost btn-sm">Filtrar</button>
+        </div>
+      </div>
+
+      <!-- Em aberto -->
+      <div class="fin-block">
+        <div class="fin-block-header">
+          <h3>Dias em aberto</h3>
+          <button id="btn-criar-fechamento" class="btn btn-primary" disabled>
+            Criar fechamento &nbsp;<span id="fech-sel-info" class="fech-sel-badge">0 dias · R$ 0,00</span>
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:36px"><input type="checkbox" id="chk-todos-abertos" title="Selecionar todos" /></th>
+                <th>Funcionário</th>
+                <th>Data</th>
+                <th>Horas</th>
+                <th>Valor/hora</th>
+                <th>Total dia</th>
+              </tr>
+            </thead>
+            <tbody id="abertos-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Histórico de fechamentos -->
+      <div class="fin-block" style="margin-top:36px">
+        <div class="fin-block-header">
+          <h3>Histórico de fechamentos</h3>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Descrição</th><th>Período</th><th>Funcionários</th>
+                <th>Dias</th><th>Total</th><th>Pagamento</th><th>Status</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="fechamentos-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+    <section id="tab-configuracoes" class="tab-section">
+      <div class="section-header"><h2>Configurações</h2></div>
+      <div class="export-card" style="max-width:420px">
+        <div class="form-group">
+          <label>Nome da empresa</label>
+          <input id="cfg-empresa" type="text" placeholder="Ex: GW Construções" />
+        </div>
+        <div id="cfg-error" class="msg-error hidden"></div>
+        <button id="btn-cfg-salvar" class="btn btn-primary">Salvar</button>
+      </div>
+    </section>
+
+    <!-- EXPORTAR CSV -->
+    <section id="tab-exportar" class="tab-section">
+      <div class="section-header"><h2>Exportar CSV</h2></div>
+      <div class="export-card">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data início</label>
+            <input type="date" id="exp-inicio" class="input-date" />
+          </div>
+          <div class="form-group">
+            <label>Data fim</label>
+            <input type="date" id="exp-fim" class="input-date" />
+          </div>
+          <div class="form-group">
+            <label>Funcionário</label>
+            <select id="exp-funcionario" class="input-select">
+              <option value="">Todos</option>
+            </select>
+          </div>
+        </div>
+        <button id="btn-exportar" class="btn btn-primary">Baixar CSV</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL FUNCIONÁRIO -->
+  <div id="modal-func" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h2 id="modal-func-title" class="modal-title">Novo funcionário</h2>
+      <input type="hidden" id="func-id" />
+      <div id="func-codigo-wrap" class="form-group">
+        <label>Código</label>
+        <div class="codigo-row">
+          <input id="func-prefixo" type="text" placeholder="GW" value="GW"
+                 autocapitalize="characters" maxlength="6" class="input-prefix" />
+          <input id="func-codigo" type="text" placeholder="001"
+                 autocapitalize="characters" maxlength="20" class="input-codigo-num" />
+        </div>
+        <span id="func-codigo-hint" class="input-hint"></span>
+      </div>
+      <div class="form-group">
+        <label>Nome completo</label>
+        <input id="func-nome" type="text" placeholder="Nome do funcionário" />
+      </div>
+      <div class="form-group">
+        <label>Valor por hora (R$)</label>
+        <input id="func-valor-hora" type="number" min="0" step="0.01" placeholder="0,00" />
+      </div>
+      <div id="func-error" class="msg-error hidden"></div>
+      <div class="modal-actions">
+        <button id="btn-func-cancelar" class="btn btn-ghost">Cancelar</button>
+        <button id="btn-func-salvar" class="btn btn-primary">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR REGISTRO -->
+  <div id="modal-reg" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h2 class="modal-title">Editar registro</h2>
+      <input type="hidden" id="reg-edit-id" />
+      <div class="form-row">
+        <div class="form-group" style="flex:0 0 110px">
+          <label>Hora</label>
+          <input id="reg-edit-hora" type="time" step="1" />
+        </div>
+        <div class="form-group" style="flex:1">
+          <label>Tipo</label>
+          <input id="reg-edit-tipo" type="text" disabled style="opacity:.5" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Observação</label>
+        <textarea id="reg-edit-obs" rows="3" placeholder="Observação (apenas registros de saída)"></textarea>
+      </div>
+      <div id="reg-edit-error" class="msg-error hidden"></div>
+      <div class="modal-actions">
+        <button id="btn-reg-cancelar" class="btn btn-ghost">Cancelar</button>
+        <button id="btn-reg-salvar" class="btn btn-primary">Salvar alteração</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CRIAR FECHAMENTO -->
+  <div id="modal-fechamento" class="modal-overlay hidden">
+    <div class="modal-card" style="max-width:540px">
+      <h2 class="modal-title">Criar fechamento</h2>
+      <div class="form-group">
+        <label>Descrição (opcional)</label>
+        <input id="fech-descricao" type="text" placeholder="Ex: Quinzena 01–15 mai/2026" />
+      </div>
+      <div class="form-group">
+        <label>Data de pagamento</label>
+        <input id="fech-data-pgto" type="date" />
+      </div>
+      <div id="fech-resumo" class="fech-resumo"></div>
+      <div id="fech-error" class="msg-error hidden"></div>
+      <div class="modal-actions">
+        <button id="btn-fech-cancelar" class="btn btn-ghost">Cancelar</button>
+        <button id="btn-fech-confirmar" class="btn btn-primary">Criar fechamento</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALHE / PAGAR FECHAMENTO -->
+  <div id="modal-fech-det" class="modal-overlay hidden">
+    <div class="modal-card fech-det-card">
+      <div class="fech-det-header">
+        <div>
+          <h2 class="modal-title" id="fech-det-titulo"></h2>
+          <p class="modal-sub" id="fech-det-sub"></p>
+        </div>
+        <span id="fech-det-badge" class="badge"></span>
+      </div>
+      <div id="fech-det-content" class="fech-det-content"></div>
+      <div id="fech-pagar-area" class="hidden" style="margin-top:16px">
+        <div class="form-group">
+          <label>Data do pagamento</label>
+          <input id="fech-pagar-data" type="date" />
+        </div>
+      </div>
+      <div id="fech-det-error" class="msg-error hidden"></div>
+      <div class="modal-actions">
+        <button id="btn-fech-det-excluir" class="btn btn-ghost" style="color:var(--c-saida);margin-right:auto">Excluir</button>
+        <button id="btn-fech-det-fechar" class="btn btn-ghost">Fechar</button>
+        <button id="btn-fech-pagar" class="btn btn-primary hidden">Marcar como pago</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOTO LIGHTBOX -->
+  <div id="lightbox" class="modal-overlay hidden" style="background:rgba(0,0,0,.9)">
+    <img id="lightbox-img" src="" alt="Foto" style="max-width:90vw;max-height:90vh;border-radius:8px;" />
+    <button id="lightbox-close" class="btn-icon" style="position:fixed;top:16px;right:16px;color:#fff;font-size:1.5rem;">✕</button>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

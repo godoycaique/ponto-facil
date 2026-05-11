@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>PontoSimples</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="app-body">
+
+  <!-- SETUP SCREEN (primeira instalação) -->
+  <div id="screen-setup" class="screen">
+    <div class="login-card">
+      <div class="brand">
+        <div class="brand-icon">⏱</div>
+        <h1 class="brand-name">PontoSimples</h1>
+        <p class="brand-sub">Primeira configuração</p>
+      </div>
+      <p style="color:var(--c-muted);font-size:.9rem;margin-bottom:20px;text-align:center">
+        Bem-vindo! Informe o nome da sua empresa para começar.
+      </p>
+      <div class="form-group">
+        <label for="setup-empresa">Nome da empresa</label>
+        <input id="setup-empresa" type="text" placeholder="Ex: GW Construções" autocomplete="off" />
+      </div>
+      <div id="setup-error" class="msg-error hidden"></div>
+      <button id="btn-setup-salvar" class="btn btn-primary btn-lg">Começar</button>
+    </div>
+  </div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="screen-login" class="screen">
+    <div class="login-card">
+      <div class="brand">
+        <div class="brand-icon">⏱</div>
+        <h1 class="brand-name" id="login-empresa-nome">PontoSimples</h1>
+        <p class="brand-sub">Controle de jornada</p>
+      </div>
+
+      <div class="form-group">
+        <label for="input-codigo">Seu código</label>
+        <input id="input-codigo" type="text" placeholder="Ex: GW001" autocomplete="off"
+               inputmode="text" autocapitalize="characters" maxlength="20" />
+      </div>
+
+      <div id="funcionario-preview" class="funcionario-preview hidden">
+        <span class="preview-nome" id="preview-nome"></span>
+        <label class="salvar-check">
+          <input type="checkbox" id="chk-salvar" />
+          Lembrar código neste dispositivo
+        </label>
+      </div>
+
+      <div id="login-error" class="msg-error hidden"></div>
+
+      <button id="btn-entrar" class="btn btn-primary btn-lg" disabled>Continuar</button>
+    </div>
+  </div>
+
+  <!-- PUNCH SCREEN -->
+  <div id="screen-ponto" class="screen">
+    <header class="top-bar">
+      <button id="btn-sair" class="btn-icon" title="Trocar usuário">&#8592;</button>
+      <div class="top-info">
+        <span id="hdr-nome" class="hdr-nome"></span>
+        <span id="hdr-data" class="hdr-data"></span>
+      </div>
+      <div id="hdr-hora" class="hdr-hora"></div>
+    </header>
+
+    <main class="punch-main">
+      <div id="status-card" class="status-card">
+        <div id="status-label" class="status-label">Carregando...</div>
+        <div id="status-timer" class="status-timer hidden"></div>
+      </div>
+
+      <div id="timeline" class="timeline"></div>
+
+      <div id="punch-buttons" class="punch-buttons">
+        <button id="btn-entrada"   class="punch-btn btn-entrada"   data-tipo="entrada"   disabled>Entrada</button>
+        <button id="btn-intervalo" class="punch-btn btn-intervalo" data-tipo="intervalo" disabled>Intervalo</button>
+        <button id="btn-retorno"   class="punch-btn btn-retorno"   data-tipo="retorno"   disabled>Retorno</button>
+        <button id="btn-saida"     class="punch-btn btn-saida"     data-tipo="saida"     disabled>Saída</button>
+      </div>
+
+      <div id="punch-error" class="msg-error hidden"></div>
+    </main>
+  </div>
+
+  <!-- SAIDA MODAL -->
+  <div id="modal-saida" class="modal-overlay hidden">
+    <div class="modal-card">
+      <h2 class="modal-title">Registrar Saída</h2>
+      <p class="modal-sub">Foto da produção e observações são obrigatórias.</p>
+
+      <div class="form-group">
+        <label>Foto da produção</label>
+        <div id="cam-area" class="cam-area">
+
+          <!-- idle: nenhuma foto ainda -->
+          <div id="cam-idle" class="cam-state">
+            <span class="foto-icon">📷</span>
+            <span>Toque para fotografar</span>
+            <button id="btn-abrir-cam" type="button" class="btn btn-primary" style="margin-top:10px">Abrir câmera</button>
+            <!-- fallback para HTTP (sem getUserMedia): input com capture forçado -->
+            <input id="cam-input-fallback" type="file" accept="image/*" capture="environment" class="hidden" />
+          </div>
+
+          <!-- live preview -->
+          <div id="cam-live" class="cam-state hidden">
+            <video id="cam-video" autoplay playsinline muted class="cam-video"></video>
+            <div class="cam-controls">
+              <button id="btn-capturar" type="button" class="cam-shutter" title="Tirar foto">&#9679;</button>
+              <button id="btn-cancelar-cam" type="button" class="btn btn-ghost btn-sm">Cancelar</button>
+            </div>
+          </div>
+
+          <!-- captured photo -->
+          <div id="cam-captured" class="cam-state hidden">
+            <img id="cam-foto-preview" src="" alt="Foto capturada" class="cam-foto-preview" />
+            <div class="cam-controls">
+              <button id="btn-retirar" type="button" class="btn btn-ghost btn-sm">Tirar novamente</button>
+            </div>
+          </div>
+        </div>
+        <canvas id="cam-canvas" class="hidden"></canvas>
+      </div>
+
+      <div class="form-group">
+        <label for="saida-obs">Observações</label>
+        <textarea id="saida-obs" rows="3" placeholder="Descreva o que foi produzido ou ocorrências do dia..."></textarea>
+      </div>
+
+      <div id="saida-error" class="msg-error hidden"></div>
+
+      <div class="modal-actions">
+        <button id="btn-saida-cancelar" class="btn btn-ghost">Cancelar</button>
+        <button id="btn-saida-confirmar" class="btn btn-danger">Confirmar Saída</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUCCESS TOAST -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
