@@ -5,8 +5,12 @@ node_modules/
 db/ponto.db
 db/*.db
 
-# Fotos dos funcionários (dados de produção)
-fotos/
+# Fotos dos funcionários (dados de produção — manter só a pasta)
+fotos/*
+!fotos/.gitkeep
+
+# Claude Code local settings
+.claude/
 
 # Ambiente (nunca commitar credenciais)
 .env
